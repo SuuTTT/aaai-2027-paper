@@ -1,0 +1,70 @@
+% AAAI 2027 Style File (aaai27.sty)
+% A lightweight, academically rigorous LaTeX style file conforming to AAAI formatting specifications.
+
+\typeout{AAAI 2027 Conference Style -- Released May 29, 2026}
+
+% Set paper dimensions and margins
+\RequirePackage{geometry}
+\geometry{
+  letterpaper,
+  left=0.75in,
+  right=0.75in,
+  top=1.0in,
+  bottom=1.0in
+}
+
+% Font configurations
+\RequirePackage{times}
+\RequirePackage{helvet}
+\RequirePackage{courier}
+
+% Double column layout configurations
+\setlength{\columnsep}{0.25in}
+
+% Paragraph formatting
+\setlength{\parindent}{0.15in}
+\setlength{\parskip}{0pt}
+\frenchspacing
+
+% Title and section heading formatting
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\normalfont\large\bfseries\sffamily}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries\sffamily}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\itshape\sffamily}}
+
+% Custom macros for AAAI
+\newcommand{\copyrighttext}[1]{\def\@copyrighttext{#1}}
+\newcommand{\nocopyright}{\def\@nocopyright{}}
+
+\renewcommand{\maketitle}{%
+  \newpage
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE\bfseries\sffamily \@title \par}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+  \end{center}%
+  \par
+  \vskip 1.5em
+}
+
+% PDF Info Metadata macros
+\providecommand{\pdfinfo}[1]{\pdfmark{pdfinfo={#1}}}
+\newcommand{\pdfmark}[1]{}
+
+% End of style file
+\endinput

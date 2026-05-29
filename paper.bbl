@@ -1,0 +1,58 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Cao et~al.(2025)Cao, Zhang, et~al.]{cao2025gpdqn}
+X.~Cao, Y.~Zhang, et~al.
+\newblock Cooperative graph partitioning reinforcement learning.
+\newblock \emph{IEEE Transactions on Neural Networks and Learning Systems},
+  2025.
+
+\bibitem[Jang et~al.(2017)Jang, Gu, and Poole]{jang2016gumbel}
+E.~Jang, S.~Gu, and B.~Poole.
+\newblock Categorical reparameterization with gumbel-softmax.
+\newblock In \emph{International Conference on Learning Representations}, 2017.
+
+\bibitem[Rashid et~al.(2018)Rashid, Samvelyan, De~Witt, Farquhar, Foerster, and
+  Whiteson]{rashid2018qmix}
+T.~Rashid, M.~Samvelyan, C.~S. De~Witt, G.~Farquhar, J.~Foerster, and
+  S.~Whiteson.
+\newblock Qmix: Monotonic value factorization for deep multi-agent
+  reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  4295--4304. PMLR, 2018.
+
+\bibitem[Silver et~al.(2017)Silver, Hubert, Schrittwieser, Antonoglou, Lai,
+  Guez, Lanctot, Sifre, Kumaran, Graepel, et~al.]{silver2017alphazero}
+D.~Silver, T.~Hubert, J.~Schrittwieser, I.~Antonoglou, M.~Lai, A.~Guez,
+  M.~Lanctot, L.~Sifre, D.~Kumaran, T.~Graepel, et~al.
+\newblock Mastering chess and shogi by self-play with a general reinforcement
+  learning algorithm.
+\newblock In \emph{arXiv preprint arXiv:1712.01815}, 2017.
+
+\bibitem[Veli{\v{c}}kovi{\'{c}} et~al.(2018)Veli{\v{c}}kovi{\'{c}}, Cucurull,
+  Casanova, Romero, Li{\`o}, and Bengio]{velickovic2018gat}
+P.~Veli{\v{c}}kovi{\'{c}}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li{\`o}, and
+  Y.~Bengio.
+\newblock Graph attention networks.
+\newblock \emph{International Conference on Learning Representations}, 2018.
+
+\bibitem[Wolf et~al.(2018)Wolf, Pape, Bailoni, Rahaman, Kreshuk, Kothe, and
+  Hamprecht]{wolf2018mutex}
+S.~Wolf, C.~Pape, A.~Bailoni, N.~Rahaman, A.~Kreshuk, U.~Kothe, and F.~A.
+  Hamprecht.
+\newblock The mutex watershed and its relation to the multi-cut problem.
+\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, 43\penalty0 (1):\penalty0 344--358, 2018.
+
+\bibitem[Yu et~al.(2022)Yu, Velu, Vinitsky, Gao, Wang, Bayen, and
+  Wu]{yu2022mappo}
+C.~Yu, A.~Velu, E.~Vinitsky, Y.~Gao, Y.~Wang, A.~Bayen, and Y.~Wu.
+\newblock The surprising effectiveness of ppo in cooperative multi-agent games.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  35:\penalty0 24611--24624, 2022.
+
+\end{thebibliography}
