@@ -39,9 +39,9 @@ Neural graph partitioning on massive real-world networks faces a systemic scalin
 \section{Introduction}
 Graph partitioning and community detection represent fundamental combinatorial challenges across social network analysis, computer vision, and bioinformatics. In signed multicut partitioning (MCMP), the objective is to partition a graph with both attractive (positive) and repulsive (negative) edges to minimize the total weight of cut positive edges plus uncut negative edges \citep{wolf2018mutex}.
 
-While high-performance Mixed-Integer Linear Programming (MILP) solvers find mathematically exact global optimums, their triplet cycle-inequality constraint sets explode as \(O(N^3)\), making them intractable for graphs exceeding \(N=100\). Recently, Graph Neural Networks combined with Reinforcement Learning (GNN-RL) have emerged as powerful neural solvers by learning sequential edge contraction heuristics \citep{cao2025gpdqn}.
+While high-performance Mixed-Integer Linear Programming (MILP) solvers find mathematically exact global optimums, their triplet cycle-inequality constraint sets explode as \(O(N^3)\), making them intractable for graphs exceeding \(N=100\). Recently, Graph Neural Networks combined with Reinforcement Learning (GNN-RL) have emerged as powerful neural solvers by learning sequential edge contraction heuristics \citep{cao2025gpdqn, ligraph2025}. 
 
-However, standard GNN-RL combinatorial partitioners are strictly monolithic: they process the entire global graph as a single batch. During backpropagation, the GNN must cache continuous activation tensors for every node across all layers, requiring over 35 GB of VRAM for large graphs. Centralized Multi-Agent RL algorithms (such as MAPPO and QMIX) also scale catastrophically due to centralized mixing networks or critics, causing immediate CUDA Out-of-Memory (OOM) failures on large graphs \citep{yu2022mappo, rashid2018qmix}.
+However, standard GNN-RL combinatorial partitioners (e.g., NeuroCUT \citep{neurocut} and GP-DQN \citep{cao2025gpdqn}) are strictly monolithic: they process the entire global graph as a single controller. During backpropagation, the GNN must cache continuous activation tensors for every node across all layers, requiring over 35 GB of VRAM for large graphs. Centralized Multi-Agent RL algorithms (such as MAPPO and QMIX) also scale catastrophically due to centralized mixing networks or critics, causing immediate CUDA Out-of-Memory (OOM) failures on large graphs \citep{yu2022mappo, rashid2018qmix}. Cooperative MARL community detectors (e.g., MARLCD \citep{alipour2022marlcd} and AC2CD \citep{ac2cd2023}) attempt to distribute learning but remain constrained to static "node-as-agent" formulations or community-quality heuristics that do not scale and lack online planning layers.
 
 In this paper, we introduce a \textbf{Decentralized Multi-Agent Graph Partitioning Fleet (Dec-POMDP)}. We deploy independent localized GAT agents \citep{velickovic2018gat} centered at high-degree seed nodes. By limiting each agent's BFS receptive field to 35 nodes, we maintain a strict \(O(1)\) VRAM memory complexity, bypassing the global backpropagation bottleneck. 
 
@@ -64,7 +64,7 @@ The global label state starts in agglomerative singleton format, and agents conc
 \end{equation}
 
 \section{Quantized Consensus \& Message Gating}
-To coordinate concurrent contractions along boundary nodes, we develop an event-triggered quantized GAT consensus protocol.
+To coordinate concurrent contractions along shared boundary nodes, we develop a **bandwidth-budgeted, event-triggered quantized GAT consensus protocol**. Unlike traditional graph-based MARL communication frameworks (e.g., TarMAC \citep{tarmac} and MAGIC \citep{magic}) that pass dense, continuous high-dimensional latent vectors along all graph edges at every step, we enforce discrete bottleneck mappings and dynamic transmission suppression.
 
 \subsection{Gumbel-Softmax Quantizer}
 Continuous GAT embeddings $h_v \in \mathbb{R}^h$ along overlapping boundaries are projected into discrete 16-bit key representation codes using a Gumbel-Softmax discrete quantizer \citep{jang2016gumbel}:
@@ -74,14 +74,29 @@ y^{\text{soft}}_{v, m, k} = \frac{\exp((\mathbf{W}_{\text{proj}} h_v + g_{m, k})
 where $g_{m, k} \sim \text{Gumbel}(0, 1)$ are independent perturbations, $\tau$ is the temperature parameter, and $\mathbf{W}_{\text{proj}}$ is the projection weights. By quantizing node states into $M=4$ categorical variables over a codebook size of $K=16$, agents share discrete keys instead of continuous vectors, achieving a \textbf{\(512\times\) bandwidth compression ratio} (e.g. 1.4~KB vs 262~KB per episode).
 
 \subsection{Event-Triggered Message Gating}
-To further reduce communication latency, we deploy recurrent linear boundary estimators and dynamic event-triggered gating. The physical transmission is suppressed if the true quantized embedding remains close to the local estimator prediction:
+To further reduce communication latency and network packets, we deploy recurrent linear boundary estimators and dynamic event-triggered gating. The physical transmission is suppressed if the true quantized embedding remains close to the local estimator prediction:
 \begin{equation}
 \|\text{Key}_{\text{true}} - \text{Key}_{\text{estimated}}\|_1 \le \sigma \cdot \operatorname{Var}(\text{History}) + \epsilon
 \end{equation}
 This gating mechanism yields an empirical sub-millisecond CPU step inference latency, enabling real-time cooperative execution.
 
 \section{Prior-Guided NonUCT Planning}
-We deploy localized concurrent Monte Carlo Tree Search (MCTS) planners \citep{silver2017alphazero} to guide Q-value selections, resolving non-stationarity via policy-prior neighbor transition noise.
+We deploy localized concurrent Monte Carlo Tree Search (MCTS) planners \citep{silver2017alphazero} to guide Q-value selections, resolving concurrent non-stationarity through a surrogate MDP formulation.
+
+\subsection{Surrogate MDP \& Non-Stationarity Resolution}
+Evaluating concurrent Monte Carlo Tree Search (MCTS) planners across multiple agents introduces severe non-stationarity: because neighboring agents concurrently modify their policies during optimization, the transition dynamics kernel for a local agent is non-stationary. To resolve this without requiring global search trees, we frame local MCTS as optimizing an approximate best response inside a Bayes-averaged surrogate MDP. 
+
+For agent $i$, we define the induced local transition model by freezing neighboring agents' policy priors $\hat{\pi}_j$ over a local planning window:
+\begin{equation}
+\tilde P_i(s_i' \mid s_i, a_i) = \sum_{a_{N(i)}} P_i(s_i' \mid s_i, a_i, a_{N(i)}) \prod_{j \in N(i)} \hat\pi_j(a_j \mid b_{ij})
+\end{equation}
+where $b_{ij}$ is the boundary consensus belief summary, and $N(i)$ represents neighboring agents sharing boundary nodes. 
+
+If the true neighbor policies $\pi_j$ and the predicted frozen priors $\hat{\pi}_j$ satisfy $\sup_{b_{ij}} \|\hat\pi_j(\cdot \mid b_{ij}) - \pi_j(\cdot \mid b_{ij})\|_1 \le \varepsilon_j$, then the induced transition model error is bounded by:
+\begin{equation}
+\|\tilde P_i - P_i^{\pi_{N(i)}}\|_1 \le \sum_{j \in N(i)} \varepsilon_j
+\end{equation}
+For a finite local planning horizon $H$, the local value bias is controlled on the order of $O(H \sum_{j \in N(i)} \varepsilon_j)$. Thus, freezing policy priors and constraining communication intervals successfully converts concurrent non-stationarity into a bounded and estimable model-bias term.
 
 \subsection{MCTS Prior-Guided Tie-Breaking}
 Under small search budgets ($M_{\text{sim}} = 5$), standard MCTS experience severe visit-count ties of 1, causing the selection argmax to break ties arbitrarily. We resolve this by breaking visit-count ties using the GNN policy prior probabilities:

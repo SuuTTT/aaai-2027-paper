@@ -1,9 +1,15 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Alipour and Abdolhosseinzadeh(2022)]{alipour2022marlcd}
+M.~Alipour and M.~Abdolhosseinzadeh.
+\newblock Marlcd: Multi-agent reinforcement learning for community detection.
+\newblock \emph{Journal of Soft Computing and Decision Support Systems},
+  9\penalty0 (4):\penalty0 12--21, 2022.
 
 \bibitem[Cao et~al.(2025)Cao, Zhang, et~al.]{cao2025gpdqn}
 X.~Cao, Y.~Zhang, et~al.
@@ -11,10 +17,32 @@ X.~Cao, Y.~Zhang, et~al.
 \newblock \emph{IEEE Transactions on Neural Networks and Learning Systems},
   2025.
 
+\bibitem[Costa et~al.(2023)]{ac2cd2023}
+A.~C. Costa et~al.
+\newblock Actor-critic community detection for dynamic social networks.
+\newblock \emph{Expert Systems with Applications}, 213:\penalty0 118930, 2023.
+
+\bibitem[Das et~al.(2019)]{tarmac}
+A.~Das et~al.
+\newblock Tarmac: Targeted multi-agent communication.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  1538--1546, 2019.
+
 \bibitem[Jang et~al.(2017)Jang, Gu, and Poole]{jang2016gumbel}
 E.~Jang, S.~Gu, and B.~Poole.
 \newblock Categorical reparameterization with gumbel-softmax.
 \newblock In \emph{International Conference on Learning Representations}, 2017.
+
+\bibitem[Li et~al.(2025)]{ligraph2025}
+B.~Li et~al.
+\newblock Deep graph reinforcement learning for solving the multicut problem.
+\newblock \emph{arXiv preprint arXiv:2502.04112}, 2025.
+
+\bibitem[Niu et~al.(2021)]{magic}
+Y.~Niu et~al.
+\newblock Magic: Multi-agent graph-attention communication and scheduling.
+\newblock In \emph{International Conference on Autonomous Agents and Multiagent
+  Systems}, pages 945--953, 2021.
 
 \bibitem[Rashid et~al.(2018)Rashid, Samvelyan, De~Witt, Farquhar, Foerster, and
   Whiteson]{rashid2018qmix}
@@ -24,6 +52,11 @@ T.~Rashid, M.~Samvelyan, C.~S. De~Witt, G.~Farquhar, J.~Foerster, and
   reinforcement learning.
 \newblock In \emph{International Conference on Machine Learning}, pages
   4295--4304. PMLR, 2018.
+
+\bibitem[Shah et~al.(2024)]{neurocut}
+V.~Shah et~al.
+\newblock A neural approach for robust graph partitioning.
+\newblock \emph{arXiv preprint arXiv:2310.11787}, 2024.
 
 \bibitem[Silver et~al.(2017)Silver, Hubert, Schrittwieser, Antonoglou, Lai,
   Guez, Lanctot, Sifre, Kumaran, Graepel, et~al.]{silver2017alphazero}
